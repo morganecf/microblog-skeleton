@@ -1,0 +1,92 @@
+ <!-- THE MAIN PAGE TEMPLATE --> 
+
+{% extends "base.html" %}
+
+{% block title %}
+  <title> You made it </title>
+{% endblock %}
+
+
+{% block wrap %}
+
+<div class="container">
+	<!-- Greetings --> 
+	<div class="row">
+		<h1> WELCOME TO A LIST OF COMMENTS </h1>
+	</div>
+
+	<!-- The comment display area --> 
+	<div class="row comments">
+		{% for comment in comments %}
+			<div class="comment">
+				<h2> {{ comment.title }} </h2>
+				<p> {{ comment.text }} </p>
+				<small> {{ comment.created }} </small>
+				<br><br>
+			</div>
+		{% endfor %}
+	</div>
+
+	<hr>
+
+	<!-- The comment post area --> 
+	<div class="row">
+		<div class="col-md-8"> 
+			<input type="text" name="title" value="Title" style="width:60%;" id="title-box"/>
+			<br>
+			<textarea type="text" name="comment" value="Comment" style="width:100%;" id="comment-box"></textarea>
+		</div>
+	</div>
+	<br>
+	<div class="row"> <div class="col-md-8"><button class="btn btn-success">Post a comment</button> </div> </div>
+
+	<hr>
+
+	<!-- The logout form --> 
+	<div class="row">
+		<div class="form-group">
+			<form action="/bye/" method="post">
+				{% csrf_token %}
+				<button type="submit" class="btn btn-primary">Logout</button>
+				<input type="hidden" name="next" value="/"/>
+			</form>
+		</div>
+	</div>
+
+</div>
+
+<script type="text/javascript">
+
+	/* 
+		Functionality to display a comment upon posting it 
+		and send the comment to the backend via ajax call.  
+		This way the comments are updated in realtime. 
+	*/
+
+	$(".btn-success").click(function () {
+		// Get whatever is in the textboxes
+		var title = $("#title-box").val();
+		var comment = $("#comment-box").val();
+
+		// Display
+		var jComment = $("<div class='comment'><h2>" + title + "</h2><p>" + comment + "</p>" + "<small>Just now</small><br></div>");
+		$(".comments").first().append(jComment);
+
+		// Send ajax call to update db with this comment
+		$.ajax({
+			type: 'GET',
+			data: {comment: comment, title: title},
+			url: '/hello/',
+			success: function () { },
+			error: function () { alert("Your comment could not be saved :("); }
+		});
+
+		// Clear the comment input box 
+		$("#comment-box").val('');
+
+	});
+
+</script>
+
+
+{% endblock %}

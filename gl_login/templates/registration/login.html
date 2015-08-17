@@ -1,0 +1,56 @@
+ <!-- THE LOGIN TEMPLATE --> 
+
+{% extends "base.html" %}
+
+{% block wrap %}
+
+<div class="container">
+  <div class="row vertical-center-row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+          <!-- Authenticate the user --> 
+          {% if user.is_authenticated %}
+            <div class="alert alert-warning">
+              You are already logged in as {{user.username}}. 
+            </div>
+          {% else %}
+          <div class="alert alert-info">
+            Please log in using your assigned username and password.
+          </div>
+          {% endif %} 
+
+          <!-- Check if entered the wrong username/password combination --> 
+          {% if form.errors %}
+          <div class="alert alert-danger">
+            Sorry, that is not a valid username or password. 
+          </div>
+          {% endif %}
+
+          <!-- The login form - requires username and password --> 
+          <div class="form-group">
+            <form action="" method="post">
+            {% csrf_token %}
+              <label for="username">Username</label>
+              <input type="text" name="username" value="" id="username" class="form-control">
+              <br>
+              <label for="password">Password</label>
+              <input type="password" name="password" value="" id="password" class="form-control">
+              <br>
+              <button type="submit" class="btn btn-primary" id="login-button">Login</button>
+              <input type="hidden" name="next" value="/hello/"/>
+            </form>
+          </div>
+
+        </div> <!-- end panel body --> 
+      </div> <!-- end panel --> 
+
+    <div class="col-md-4"></div>
+
+  </div> <!-- end row --> 
+</div> <!-- end container --> 
+
+{% endblock %}
